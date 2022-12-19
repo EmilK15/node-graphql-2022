@@ -1,5 +1,35 @@
-const { resolvers } = require('./resolvers');
-const { typeDefs } = require('./typeDefs');
+const {
+    mergeTypeDefs,
+    mergeResolvers
+} = require('@graphql-tools/merge')
+
+const {
+    resolvers: propertyResolvers,
+    typeDefs: propertyTypeDefs
+} = require('./properties');
+
+const {
+    resolvers: propertyOwnerResolvers,
+    typeDefs: propertyOwnerTypeDefs
+} = require('./propertyOwners');
+
+const {
+    resolvers: renterResolvers,
+    typeDefs: renterTypeDefs
+} = require('./renters');
+
+
+const typeDefs = mergeTypeDefs([
+    propertyTypeDefs,
+    propertyOwnerTypeDefs,
+    renterTypeDefs
+]);
+
+const resolvers = mergeResolvers([
+    propertyResolvers,
+    propertyOwnerResolvers,
+    renterResolvers
+]);
 
 module.exports = {
     resolvers,

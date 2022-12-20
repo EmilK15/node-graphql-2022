@@ -8,7 +8,7 @@ const typeDefs = `#graphql
         available: Boolean
         description: String
         photos: [String]
-        propertyOwner: ID!
+        propertyOwner: PropertyOwner!
     }
 
     input CreatePropertyInput {
@@ -23,6 +23,7 @@ const typeDefs = `#graphql
     }
 
     type Query {
+        getPropertyById(propertyId: ID!): Property
         properties: [Property]
     }
 

@@ -1,23 +1,24 @@
-let { renters } = require('../../data');
+const {
+    getRenterById,
+    createRenter,
+    getAllRenters
+} = require('./dataSource');
 
 const resolvers = {
+    Renter: {
+        roommates(parent, _args, _context) {
+            return parent.roommates.map((roommateId) => getRenterById(roommateId));
+        }
+    },
     Query: {
-        renters: () => renters
+        getRenterById: (_parent, args) => {
+            return getRenterById(args.renterId);
+        },
+        renters: () => getAllRenters()
     },
     Mutation: {
         createRenter: (_parent, args) => {
-            const newRenter = {
-                city: args.city,
-                id: crypto.randomUUID(),
-                name: args.name,
-                rating: 0,
-                roommates: args.roommates || []
-            }
-            renters = [
-                ...renters,
-                newRenter
-            ]
-            return newRenter
+            return createRenter(args.createRenterInput);
         }
     }
 };

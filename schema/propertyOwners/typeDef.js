@@ -18,6 +18,7 @@ const typeDefs = `#graphql
 
     type Query {
         propertyOwners: [PropertyOwner]
+        getPropertyOwnerById(propertyOwnerId: ID!): PropertyOwner
     }
 
     type Mutation {

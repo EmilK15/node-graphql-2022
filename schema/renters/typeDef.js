@@ -16,6 +16,7 @@ const typeDefs = `#graphql
 
     type Query {
         renters: [Renter]
+        getRenterById(renterId: ID!): Renter
     }
 
     type Mutation {

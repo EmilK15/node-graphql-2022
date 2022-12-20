@@ -1,27 +1,33 @@
-let { properties } = require('../../data');
+const {
+    getPropertyById,
+    createProperty,
+    getAllProperties
+} = require('./dataSource')
+const {
+    getPropertyOwnerById
+} = require('../propertyOwners/dataSource')
+const {
+    getRenterById
+} = require('../renters/dataSource')
 
 const resolvers = {
+    Property: {
+        renters(parent, _args, _context) {
+            return parent.renters.map((renterId) => getRenterById(renterId));
+        },
+        propertyOwner(parent, _args, _context) {
+            return getPropertyOwnerById(parent.propertyOwner);
+        }
+    },
     Query: {
-        properties: () => properties
+        getPropertyById: (_parent, args) => {
+            return getPropertyById(args.propertyId);
+        },
+        properties: () => getAllProperties()
     },
     Mutation: {
         createProperty: (_parent, args) => {
-            const newProperty = {
-                available: args.available,
-                city: args.city,
-                description: args.description,
-                id: crypto.randomUUID(),
-                name: args.name,
-                photos: args.photos || [],
-                propertyOwner: args.propertyOwner,
-                rating: 0,
-                renters: args.renters || []
-            }
-            properties = [
-                ...properties,
-                newProperty
-            ]
-            return newProperty
+            return createProperty(args.createPropertyInput);
         }
     }
 };

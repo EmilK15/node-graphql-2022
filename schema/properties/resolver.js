@@ -2,13 +2,13 @@ const {
     getPropertyById,
     createProperty,
     getAllProperties
-} = require('./dataSource')
+} = require('./dataSource');
 const {
     getPropertyOwnerById
-} = require('../propertyOwners/dataSource')
+} = require('../propertyOwners/dataSource');
 const {
     getRenterById
-} = require('../renters/dataSource')
+} = require('../renters/dataSource');
 
 const resolvers = {
     Property: {

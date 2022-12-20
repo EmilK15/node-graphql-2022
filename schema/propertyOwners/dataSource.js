@@ -15,13 +15,13 @@ function createPropertyOwner(propertyOwner) {
         address: propertyOwner.address,
         properties: propertyOwner.properties || [],
         photo: propertyOwner.photo
-    }
+    };
 
     propertyOwners = [
         ...propertyOwners,
         newPropertyOwner
-    ]
-    return newPropertyOwner
+    ];
+    return newPropertyOwner;
 }
 
 function getAllPropertyOwners() {

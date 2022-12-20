@@ -5,7 +5,7 @@ const {
 } = require('./dataSource');
 const {
     getPropertyById
-} = require('../properties/dataSource')
+} = require('../properties/dataSource');
 
 const resolvers = {
     PropertyOwner: {

@@ -13,12 +13,12 @@ function createRenter(renter) {
         name: renter.name,
         rating: 0,
         roommates: renter.roommates || []
-    }
+    };
     renters = [
         ...renters,
         newRenter
-    ]
-    return newRenter
+    ];
+    return newRenter;
 }
 
 function getAllRenters() {

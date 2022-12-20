@@ -19,13 +19,13 @@ function createProperty(property) {
         propertyOwner: property.propertyOwner,
         rating: 0,
         renters: property.renters || []
-    }
+    };
 
     properties = [
         ...properties,
         newProperty
-    ]
-    return newProperty
+    ];
+    return newProperty;
 }
 
 function getAllProperties() {

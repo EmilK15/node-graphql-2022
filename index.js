@@ -1,6 +1,7 @@
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer');
+const { ApolloServerPluginCacheControl } = require('@apollo/server/plugin/cacheControl');
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -13,7 +14,15 @@ const httpServer = http.createServer(app);
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+    plugins: [
+        ApolloServerPluginDrainHttpServer({ httpServer }),
+        ApolloServerPluginCacheControl({
+            // Cache everything for 1 second by default.
+            defaultMaxAge: 1,
+            // Don't send the `cache-control` response header.
+            calculateHttpHeaders: false,
+        })
+    ]
 });
 
 async function main() {

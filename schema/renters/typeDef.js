@@ -5,6 +5,8 @@ const typeDefs = `#graphql
         city: String!
         rating: Float
         roommates: [Renter]
+        deprecatedField: Boolean @deprecated(reason: "Use nonDeprecatedField.")
+        nonDeprecatedField: Boolean
     }
 
     input CreateRenterInput {
@@ -12,6 +14,8 @@ const typeDefs = `#graphql
         city: String!
         # need ID to attach roommate to renter
         roommates: [ID]
+        deprecatedField: Boolean @deprecated(reason: "Use nonDeprecatedField.")
+        nonDeprecatedField: Boolean
     }
 
     type Query {

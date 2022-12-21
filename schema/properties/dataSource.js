@@ -1,6 +1,7 @@
 
 const crypto = require('crypto');
 let { properties } = require('../../data');
+const { PropertyNotFoundError } = require('../../errors');
 
 function getPropertyById(propertyId) {
     return properties.find(
@@ -28,6 +29,26 @@ function createProperty(property) {
     return newProperty;
 }
 
+function updateProperty(propertyId, updatedProperty) {
+    const foundPropertyIndex = properties.findIndex(
+        (aProperty) => aProperty.id === propertyId
+    )
+
+    if (foundPropertyIndex < 0) {
+        return PropertyNotFoundError(propertyId)
+    }
+
+    properties[foundPropertyIndex] = {
+        ...properties[foundPropertyIndex],
+        ...updatedProperty
+    };
+
+    return {
+        __typename: 'Property',
+        ...properties[foundPropertyIndex]
+    };
+}
+
 function getAllProperties() {
     return properties;
 }
@@ -35,5 +56,6 @@ function getAllProperties() {
 module.exports = {
     getPropertyById,
     createProperty,
-    getAllProperties
+    getAllProperties,
+    updateProperty
 }

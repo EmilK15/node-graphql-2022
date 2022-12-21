@@ -4,6 +4,10 @@ const {
 } = require('@graphql-tools/merge')
 
 const {
+    typeDefs: commonTypeDefs
+} = require('./common');
+
+const {
     resolvers: propertyResolvers,
     typeDefs: propertyTypeDefs
 } = require('./properties');
@@ -20,6 +24,7 @@ const {
 
 
 const typeDefs = mergeTypeDefs([
+    commonTypeDefs,
     propertyTypeDefs,
     propertyOwnerTypeDefs,
     renterTypeDefs

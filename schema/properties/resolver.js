@@ -1,7 +1,8 @@
 const {
     getPropertyById,
     createProperty,
-    getAllProperties
+    getAllProperties,
+    updateProperty
 } = require('./dataSource');
 const {
     getPropertyOwnerById
@@ -28,6 +29,9 @@ const resolvers = {
     Mutation: {
         createProperty: (_parent, args) => {
             return createProperty(args.createPropertyInput);
+        },
+        updateProperty: (_parent, args) => {
+            return updateProperty(args.updatePropertyInput.id, args.updatePropertyInput);
         }
     }
 };

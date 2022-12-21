@@ -6,9 +6,9 @@ const typeDefs = `#graphql
         available: Boolean
         description: String
         photos: [String]
-        rating: Float
+        rating: Float @cacheControl(maxAge: 60)
         renters: [Renter]
-        propertyOwner: PropertyOwner!
+        propertyOwner: PropertyOwner! @cacheControl(maxAge: 60)
     }
 
     input CreatePropertyInput {

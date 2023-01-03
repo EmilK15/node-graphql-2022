@@ -1,6 +1,6 @@
 function PropertyNotFoundError(propertyId) {
     return {
-        __type: 'PropertyNotFoundError',
+        __typename: 'PropertyNotFoundError',
         message: 'Unable to find property with associated id.',
         propertyId
     }

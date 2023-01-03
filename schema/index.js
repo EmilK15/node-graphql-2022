@@ -1,7 +1,7 @@
 const {
     mergeTypeDefs,
     mergeResolvers
-} = require('@graphql-tools/merge')
+} = require('@graphql-tools/merge');
 
 const {
     typeDefs: commonTypeDefs

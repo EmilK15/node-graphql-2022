@@ -1,4 +1,4 @@
-const { typeDefs } = require('./typeDef');
+const { typeDefs } = require('./schema');
 
 module.exports = {
     typeDefs

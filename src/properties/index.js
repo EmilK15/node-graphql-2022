@@ -1,5 +1,5 @@
 const { resolvers } = require('./resolver');
-const { typeDefs } = require('./typeDef');
+const { typeDefs } = require('./schema');
 
 module.exports = {
     resolvers,

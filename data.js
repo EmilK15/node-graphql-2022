@@ -17,7 +17,7 @@ const renters = [
 
 // Create renter/roommate relation
 renters[0].roommates.push(renters[1].id);
-renters[1].roommates.push(renters[0].id)
+renters[1].roommates.push(renters[0].id);
 
 const propertyOwners = [
     {

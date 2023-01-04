@@ -3,7 +3,7 @@ const typeDefs = `#graphql
         id: ID
         name: String!
         address: String!
-        rating: Int
+        rating: Float
         properties: [Property]
         photo: String
     }
@@ -11,7 +11,6 @@ const typeDefs = `#graphql
     input CreatePropertyOwnerInput {
         name: String!
         address: String!
-        # this ID is optional, maybe propertyOwner created first, then property added later
         properties: [ID]
         photo: String
     }

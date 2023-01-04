@@ -13,10 +13,10 @@ const {
 
 const resolvers = {
     Property: {
-        renters(parent, _args, _context) {
+        renters(parent) {
             return parent.renters.map((renterId) => getRenterById(renterId));
         },
-        propertyOwner(parent, _args, _context) {
+        propertyOwner(parent) {
             return getPropertyOwnerById(parent.propertyOwner);
         }
     },

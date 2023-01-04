@@ -6,7 +6,7 @@ const {
 
 const resolvers = {
     Renter: {
-        roommates(parent, _args, _context) {
+        roommates(parent) {
             return parent.roommates.map((roommateId) => getRenterById(roommateId));
         }
     },

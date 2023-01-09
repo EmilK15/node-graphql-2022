@@ -3,9 +3,9 @@ function PropertyNotFoundError(propertyId) {
         __typename: 'PropertyNotFoundError',
         message: 'Unable to find property with associated id.',
         propertyId
-    }
-}
+    };
+};
 
 module.exports = {
     PropertyNotFoundError
-}
+};

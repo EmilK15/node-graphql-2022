@@ -19,7 +19,7 @@ const typeDefs = `#graphql
         photos: [String]
         # need ID to attach renter to renters
         renters: [ID]
-        propertyOwner: ID!
+        propertyOwnerId: ID!
     }
 
     input UpdatePropertyInput {

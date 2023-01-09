@@ -17,7 +17,7 @@ function createProperty(property) {
         id: crypto.randomUUID(),
         name: property.name,
         photos: property.photos || [],
-        propertyOwner: property.propertyOwner,
+        propertyOwner: property.propertyOwnerId,
         rating: 0,
         renters: property.renters || []
     };
@@ -32,10 +32,10 @@ function createProperty(property) {
 function updateProperty(propertyId, updatedProperty) {
     const foundPropertyIndex = properties.findIndex(
         (aProperty) => aProperty.id === propertyId
-    )
+    );
 
     if (foundPropertyIndex < 0) {
-        return PropertyNotFoundError(propertyId)
+        return PropertyNotFoundError(propertyId);
     }
 
     properties[foundPropertyIndex] = {

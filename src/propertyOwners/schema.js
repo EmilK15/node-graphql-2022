@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
     type PropertyOwner {
-        id: ID
+        id: ID!
         name: String!
         address: String!
         rating: Float

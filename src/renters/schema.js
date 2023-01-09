@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
     type Renter {
-        id: ID
+        id: ID!
         name: String!
         city: String!
         rating: Float

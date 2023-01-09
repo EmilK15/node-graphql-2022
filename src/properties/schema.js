@@ -1,6 +1,6 @@
 const typeDefs = `#graphql
     type Property {
-        id: ID
+        id: ID!
         name: String!
         city: String!
         available: Boolean

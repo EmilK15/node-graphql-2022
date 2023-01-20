@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer');
@@ -6,6 +7,7 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const { typeDefs, resolvers } = require('./src');
 
 const app = express();
@@ -25,6 +27,9 @@ const server = new ApolloServer({
     ]
 });
 
+mongoose.connect(process.env.MONGODB_URL);
+mongoose.set('strictQuery', false);
+
 async function main() {
     await server.start();
 
@@ -36,7 +41,9 @@ async function main() {
         // expressMiddleware accepts the same arguments:
         // an Apollo Server instance and optional configuration options
         expressMiddleware(server, {
-            context: async ({ req }) => ({ token: req.headers.token }),
+            context: async ({ req }) => ({
+                token: req.headers.token
+            }),
         })
     );
     await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));

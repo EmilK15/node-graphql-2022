@@ -1,35 +1,33 @@
 
-const crypto = require('crypto');
-let { propertyOwners } = require('../../data');
+const { PropertyOwner } = require('../models');
 
-function getPropertyOwnerById(propertyOwnerId) {
-    return propertyOwners.find(
-        (propertyOwner) => propertyOwner.id === propertyOwnerId
-    );
+async function getPropertyOwnerById(propertyOwnerId) {
+    return PropertyOwner.findById(propertyOwnerId)
+        .populate('properties');
 }
 
-function createPropertyOwner(propertyOwner) {
-    const newPropertyOwner = {
-        id: crypto.randomUUID(),
+async function createPropertyOwner(propertyOwner) {
+    const newPropertyOwner = new PropertyOwner({
         name: propertyOwner.name,
         address: propertyOwner.address,
         properties: propertyOwner.properties || [],
-        photo: propertyOwner.photo
-    };
+        photo: propertyOwner.photo,
+        rating: 0
+    });
 
-    propertyOwners = [
-        ...propertyOwners,
-        newPropertyOwner
-    ];
-    return newPropertyOwner;
+    const savedPropertyOwner = await newPropertyOwner.save();
+
+    return savedPropertyOwner
+        .populate('properties');
 }
 
-function getAllPropertyOwners() {
-    return propertyOwners;
+async function getAllPropertyOwners() {
+    return PropertyOwner.find({})
+        .populate('properties');
 }
 
 module.exports = {
     getPropertyOwnerById,
     createPropertyOwner,
     getAllPropertyOwners
-}
+};

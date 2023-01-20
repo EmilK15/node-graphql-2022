@@ -4,33 +4,19 @@ const {
     getAllProperties,
     updateProperty
 } = require('./dataSource');
-const {
-    getPropertyOwnerById
-} = require('../propertyOwners/dataSource');
-const {
-    getRenterById
-} = require('../renters/dataSource');
 
 const resolvers = {
-    Property: {
-        renters(parent) {
-            return parent.renters.map((renterId) => getRenterById(renterId));
-        },
-        propertyOwner(parent) {
-            return getPropertyOwnerById(parent.propertyOwner);
-        }
-    },
     Query: {
-        getPropertyById: (_parent, args) => {
+        getPropertyById: async (_parent, args) => {
             return getPropertyById(args.propertyId);
         },
-        properties: () => getAllProperties()
+        properties: async () => getAllProperties()
     },
     Mutation: {
-        createProperty: (_parent, args) => {
+        createProperty: async (_parent, args) => {
             return createProperty(args.createPropertyInput);
         },
-        updateProperty: (_parent, args) => {
+        updateProperty: async (_parent, args) => {
             return updateProperty(args.updatePropertyInput.id, args.updatePropertyInput);
         }
     }

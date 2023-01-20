@@ -1,56 +1,56 @@
-
-const crypto = require('crypto');
-let { properties } = require('../../data');
+const { Property } = require('../models');
 const { PropertyNotFoundError } = require('../../errors');
 
-function getPropertyById(propertyId) {
-    return properties.find(
-        (property) => property.id === propertyId
-    );
+async function getPropertyById(propertyId) {
+    return Property.findById(propertyId)
+        .populate('renters propertyOwner');
 }
 
-function createProperty(property) {
-    const newProperty = {
+async function createProperty(property) {
+    const newProperty = new Property({
         available: property.available,
         city: property.city,
         description: property.description,
-        id: crypto.randomUUID(),
         name: property.name,
         photos: property.photos || [],
         propertyOwner: property.propertyOwnerId,
         rating: 0,
         renters: property.renters || []
-    };
+    });
 
-    properties = [
-        ...properties,
-        newProperty
-    ];
-    return newProperty;
+    const savedProperty = await newProperty.save();
+
+    return savedProperty
+        .populate('renters propertyOwner');
 }
 
-function updateProperty(propertyId, updatedProperty) {
-    const foundPropertyIndex = properties.findIndex(
-        (aProperty) => aProperty.id === propertyId
-    );
+async function updateProperty(propertyId, updatedProperty) {
+    const savedProperty = await Property.findByIdAndUpdate(
+        propertyId,
+        updatedProperty,
+        { new: true }
+    ).populate('renters propertyOwner');
 
-    if (foundPropertyIndex < 0) {
+    if (!savedProperty) {
         return PropertyNotFoundError(propertyId);
     }
-
-    properties[foundPropertyIndex] = {
-        ...properties[foundPropertyIndex],
-        ...updatedProperty
-    };
-
     return {
         __typename: 'Property',
-        ...properties[foundPropertyIndex]
-    };
+        id: savedProperty.id,
+        available: savedProperty.available,
+        city: savedProperty.city,
+        description: savedProperty.description,
+        name: savedProperty.name,
+        photos: savedProperty.photos,
+        propertyOwner: savedProperty.propertyOwnerId,
+        rating: savedProperty.rating,
+        renters: savedProperty.renters
+    }
 }
 
-function getAllProperties() {
-    return properties;
+async function getAllProperties() {
+    return Property.find({})
+        .populate('renters propertyOwner');
 }
 
 module.exports = {
@@ -58,4 +58,4 @@ module.exports = {
     createProperty,
     getAllProperties,
     updateProperty
-}
+};

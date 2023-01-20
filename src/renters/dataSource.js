@@ -1,32 +1,29 @@
+const { Renter } = require('../models');
 
-const crypto = require('crypto');
-let { renters } = require('../../data');
-
-function getRenterById(renterId) {
-    return renters.find((renter) => renter.id === renterId);
+async function getRenterById(renterId) {
+    return Renter.findById(renterId)
+        .populate('roommates');
 }
 
-function createRenter(renter) {
-    const newRenter = {
+async function createRenter(renter) {
+    const newRenter = new Renter({
         city: renter.city,
-        id: crypto.randomUUID(),
         name: renter.name,
         rating: 0,
         roommates: renter.roommates || []
-    };
-    renters = [
-        ...renters,
-        newRenter
-    ];
-    return newRenter;
+    });
+
+    const savedRenter = await newRenter.save();
+    return savedRenter.populate('roommates');
 }
 
-function getAllRenters() {
-    return renters;
+async function getAllRenters() {
+    return Renter.find({})
+        .populate('roommates');
 }
 
 module.exports = {
     getRenterById,
     createRenter,
     getAllRenters
-}
+};

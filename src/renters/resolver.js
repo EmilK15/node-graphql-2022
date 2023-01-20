@@ -5,19 +5,16 @@ const {
 } = require('./dataSource');
 
 const resolvers = {
-    Renter: {
-        roommates(parent) {
-            return parent.roommates.map((roommateId) => getRenterById(roommateId));
-        }
-    },
     Query: {
-        getRenterById: (_parent, args) => {
+        getRenterById: async (_parent, args) => {
             return getRenterById(args.renterId);
         },
-        renters: () => getAllRenters()
+        renters: async (_parent, _args) => {
+            return getAllRenters();
+        }
     },
     Mutation: {
-        createRenter: (_parent, args) => {
+        createRenter: async (_parent, args) => {
             return createRenter(args.createRenterInput);
         }
     }

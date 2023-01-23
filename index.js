@@ -27,8 +27,8 @@ const server = new ApolloServer({
     ]
 });
 
-mongoose.connect(process.env.MONGODB_URL);
 mongoose.set('strictQuery', false);
+mongoose.connect(process.env.MONGODB_URL);
 
 async function main() {
     await server.start();

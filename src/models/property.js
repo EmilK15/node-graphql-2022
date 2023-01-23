@@ -3,14 +3,18 @@ const { Schema, model } = require('mongoose');
 const propertySchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        maxLength: 60
     },
     city: {
         type: String,
         required: true
     },
     available: Boolean,
-    description: String,
+    description: {
+        type: String,
+        maxLength: 250
+    },
     photos: [String],
     rating: {
         type: Number,

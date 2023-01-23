@@ -59,8 +59,8 @@ const properties = [
 
 async function runSeed() {
 
-    mongoose.connect(process.env.MONGODB_URL);
     mongoose.set('strictQuery', false);
+    mongoose.connect(process.env.MONGODB_URL);
     try {
         const newRenter = new Renter(renters[0]);
         const newRenterTwo = new Renter(renters[1]);
@@ -96,7 +96,7 @@ async function runSeed() {
     } catch (err) {
         console.error('runSeed error', err);
     } finally {
-        // mongoose
+        mongoose.connection.close();
     }
 }
 

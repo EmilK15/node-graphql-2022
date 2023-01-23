@@ -3,7 +3,8 @@ const { Schema, model } = require('mongoose');
 const renterSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        maxLength: 60
     },
     city: {
         type: String,

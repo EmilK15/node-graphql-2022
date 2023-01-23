@@ -3,7 +3,8 @@ const { Schema, model } = require('mongoose');
 const propertyOwnerSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        maxLength: 60
     },
     address: {
         type: String,

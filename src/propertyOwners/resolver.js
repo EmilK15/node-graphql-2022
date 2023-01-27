@@ -3,16 +3,8 @@ const {
     getAllPropertyOwners,
     getPropertyOwnerById
 } = require('./dataSource');
-const {
-    getPropertyById
-} = require('../properties/dataSource');
 
 const resolvers = {
-    PropertyOwner: {
-        properties(parent, _args) {
-            return parent.properties.map((propertyId) => getPropertyById(propertyId));
-        }
-    },
     Query: {
         getPropertyOwnerById: (_parent, args) => {
             return getPropertyOwnerById(args.propertyOwnerId);

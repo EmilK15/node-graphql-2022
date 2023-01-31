@@ -9,7 +9,7 @@ async function createRenter(renter) {
     const newRenter = new Renter({
         city: renter.city,
         name: renter.name,
-        rating: 0,
+        rating: 0.0,
         roommates: renter.roommates || []
     });
 

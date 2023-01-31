@@ -6,7 +6,7 @@ const renters = [
     {
         name: 'renter 1',
         city: 'Toronto',
-        rating: 4,
+        rating: 4.0,
         roommates: []
     },
     {

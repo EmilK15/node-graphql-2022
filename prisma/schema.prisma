@@ -7,34 +7,43 @@ datasource db {
   url      = env("MONGODB_URL")
 }
 
-model properties {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  v             Int      @map("__v")
-  available     Boolean
-  city          String
-  description   String
-  name          String
-  photos        String[]
-  propertyOwner String   @db.ObjectId
-  rating        Float
-  renters       String[]
+model Properties {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int      @map("__v")
+  available       Boolean
+  city            String
+  description     String
+  name            String
+  photos          String[]
+  propertyOwner   PropertyOwners @relation(fields: [propertyOwnerId], references: [id])
+  propertyOwnerId String   @map("propertyOwner") @db.ObjectId
+  rating          Float
+  renterIds       String[] @db.ObjectId
+  renters         Renters[]
+  @@map("properties")
 }
 
-model propertyowners {
+model PropertyOwners {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   v          Int      @map("__v")
   address    String
   name       String
   photo      String
-  properties String[]
+  properties Properties[]
   rating     Float
+  @@map("propertyowners")
 }
 
-model renters {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
+model Renters {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int       @map("__v")
   city      String
   name      String
   rating    Float
-  roommates String[]
+  roommates Renters[] @relation("RoommateRenters")
+  roommate Renters? @relation("RoommateRenters", fields: [roommateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  roommateId String? @db.ObjectId
+  propertiesId String @db.ObjectId
+  properties   Properties? @relation(fields: [propertiesId], references: [id])
+  @@map("renters")
 }

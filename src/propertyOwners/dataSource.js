@@ -1,12 +1,18 @@
 
 const { PropertyOwner } = require('../models');
 
-async function getPropertyOwnerById(propertyOwnerId) {
-    return PropertyOwner.findById(propertyOwnerId)
-        .populate('properties');
+async function getPropertyOwnerById(propertyOwnerId, Prisma) {
+    return Prisma.propertyOwners.findUnique({
+        where: {
+            id: propertyOwnerId
+        },
+        include: {
+            properties: true
+        }
+    });
 }
 
-async function createPropertyOwner(propertyOwner) {
+async function createPropertyOwner(propertyOwner, Prisma) {
     const newPropertyOwner = new PropertyOwner({
         name: propertyOwner.name,
         address: propertyOwner.address,
@@ -21,9 +27,12 @@ async function createPropertyOwner(propertyOwner) {
         .populate('properties');
 }
 
-async function getAllPropertyOwners() {
-    return PropertyOwner.find({})
-        .populate('properties');
+async function getAllPropertyOwners(Prisma) {
+    return Prisma.propertyOwners.findMany({
+        include: {
+            properties: true
+        }
+    });
 }
 
 module.exports = {

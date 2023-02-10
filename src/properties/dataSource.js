@@ -1,6 +1,5 @@
-const { Property } = require('../models');
+const omit = require('lodash.omit');
 const { PropertyNotFoundError } = require('../../errors');
-const PrismaLocal = require('../prisma');
 
 async function getPropertyById(propertyId, Prisma) {
     return Prisma.properties.findUnique({
@@ -37,32 +36,47 @@ async function createProperty(property, Prisma) {
 }
 
 async function updateProperty(propertyId, updatedProperty, Prisma) {
-    const savedProperty = await Property.findByIdAndUpdate(
-        propertyId,
-        updatedProperty,
-        { new: true }
-    ).populate('renters propertyOwner');
+    const nonConnectPropertyFields = omit(updatedProperty, ['id', 'renters', 'propertyOwner']);
 
-    if (!savedProperty) {
+    const renters = updatedProperty.renters && {
+        connect: updatedProperty?.renters.map((renterId) => ({ id: renterId }))
+    };
+    const propertyOwner = updatedProperty.propertyOwner && {
+        connect: { id: updatedProperty.propertyOwner }
+    };
+
+    try {
+        const savedProperty = await Prisma.properties.update({
+            where: {
+                id: propertyId
+            },
+            data: {
+                ...nonConnectPropertyFields,
+                ...(renters),
+                ...(propertyOwner)
+            },
+            include: {
+                renters: true,
+                propertyOwner: true
+            }
+        });
+        return {
+            __typename: 'Property',
+            ...savedProperty
+        };
+
+    } catch (err) {
         return PropertyNotFoundError(propertyId);
-    }
-    return {
-        __typename: 'Property',
-        id: savedProperty.id,
-        available: savedProperty.available,
-        city: savedProperty.city,
-        description: savedProperty.description,
-        name: savedProperty.name,
-        photos: savedProperty.photos,
-        propertyOwner: savedProperty.propertyOwnerId,
-        rating: savedProperty.rating,
-        renters: savedProperty.renters
     }
 }
 
 async function getAllProperties(Prisma) {
-    return Property.find({})
-        .populate('renters propertyOwner');
+    return Prisma.properties.findMany({
+        include: {
+            renters: true,
+            propertyOwner: true
+        }
+    });
 }
 
 module.exports = {

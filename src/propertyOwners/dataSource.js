@@ -1,6 +1,3 @@
-
-const { PropertyOwner } = require('../models');
-
 async function getPropertyOwnerById(propertyOwnerId, Prisma) {
     return Prisma.propertyOwners.findUnique({
         where: {
@@ -13,18 +10,21 @@ async function getPropertyOwnerById(propertyOwnerId, Prisma) {
 }
 
 async function createPropertyOwner(propertyOwner, Prisma) {
-    const newPropertyOwner = new PropertyOwner({
-        name: propertyOwner.name,
-        address: propertyOwner.address,
-        properties: propertyOwner.properties || [],
-        photo: propertyOwner.photo,
-        rating: 0
+    return Prisma.propertyOwners.create({
+        data: {
+            name: propertyOwner.name,
+            address: propertyOwner.address,
+            properties: {
+                connect: propertyOwner.properties.map((propertyId) => ({ id: propertyId }))
+            },
+            photo: propertyOwner.photo,
+            rating: 0.0,
+            v: 0
+        },
+        include: {
+            properties: true
+        }
     });
-
-    const savedPropertyOwner = await newPropertyOwner.save();
-
-    return savedPropertyOwner
-        .populate('properties');
 }
 
 async function getAllPropertyOwners(Prisma) {

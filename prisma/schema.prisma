@@ -16,7 +16,7 @@ model Properties {
   name            String
   photos          String[]
   propertyOwner   PropertyOwners @relation(fields: [propertyOwnerId], references: [id])
-  propertyOwnerId String         @map("propertyOwner") @db.ObjectId
+  propertyOwnerId String         @db.ObjectId
   rating          Float
   renters         Renters[]
 

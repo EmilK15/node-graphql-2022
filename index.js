@@ -7,7 +7,6 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const { typeDefs, resolvers } = require('./src');
 const prisma = require('./src/prisma');
 
@@ -27,9 +26,6 @@ const server = new ApolloServer({
         })
     ]
 });
-
-mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGODB_URL);
 
 async function main() {
     await server.start();

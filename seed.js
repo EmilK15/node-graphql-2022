@@ -1,19 +1,17 @@
-require('dotenv').config();
-const mongoose = require('mongoose');
-const { Property, PropertyOwner, Renter } = require('./src/models');
+const Prisma = require('./src/prisma');
 
 const renters = [
     {
         name: 'renter 1',
         city: 'Toronto',
         rating: 4.0,
-        roommates: []
+        v: 0
     },
     {
         name: 'renter 2',
         city: 'Toronto',
         rating: 3.5,
-        roommates: []
+        v: 0
     }
 ];
 
@@ -22,15 +20,15 @@ const propertyOwners = [
         name: 'owner 1',
         address: 'Toronto',
         rating: 4.0,
-        properties: [],
-        photo: 'something'
+        photo: 'something',
+        v: 0
     },
     {
         name: 'owner 2',
         address: 'Toronto',
         rating: 4.0,
-        properties: [],
-        photo: 'something'
+        photo: 'something',
+        v: 0
     }
 ];
 
@@ -39,64 +37,92 @@ const properties = [
         name: 'Deluxe suite 1',
         city: 'Toronto',
         rating: 5.0,
-        renters: [],
         available: true,
         description: 'amazing place 1',
         photos: [],
-        propertyOwner: null
+        v: 0
     },
     {
         name: 'Deluxe suite 2',
         city: 'Toronto',
         rating: 5.0,
-        renters: [],
         available: true,
         description: 'amazing place 2',
         photos: [],
-        propertyOwner: null
+        v: 0
     }
 ];
 
 async function runSeed() {
-
-    mongoose.set('strictQuery', false);
-    mongoose.connect(process.env.MONGODB_URL);
     try {
-        const newRenter = new Renter(renters[0]);
-        const newRenterTwo = new Renter(renters[1]);
+        // create two renters, one of which is roommates with the second nested renter
+        const firstRenter = await Prisma.renters.create({
+            data: {
+                ...renters[0],
+                roommates: {
+                    create: renters[1]
+                }
+            },
+            include: {
+                roommates: true
+            }
+        });
+        // connect renter 2 to be a roommate of renter 1
+        const secondRenter = await Prisma.renters.update({
+            where: {
+                id: firstRenter.roommates[0].id
+            },
+            data: {
+                roommates: {
+                    connect: { id: firstRenter.id }
+                }
+            },
+            include: {
+                roommates: true
+            }
+        });
 
-        // establish relationship
-        newRenter.set('roommates', [newRenterTwo._id]);
-        newRenterTwo.set('roommates', [newRenter._id]);
-        
-        await newRenter.save();
-        await newRenterTwo.save();
+        // Create propertyOwners with connected properties
+        // then connect renters to properties
+        await Prisma.propertyOwners.create({
+            data: {
+                ...propertyOwners[0],
+                properties: {
+                    create:  {
+                        ...properties[0],
+                        renters: {
+                            connect: [{ id: firstRenter.id }]
+                        }
+                    }
+                }
+            },
+            include: {
+                properties: true
+            }
+        });
 
-        const newPropertyOwner = new PropertyOwner(propertyOwners[0]);
-        const newPropertyOwnerTwo = new PropertyOwner(propertyOwners[1]);
+        await Prisma.propertyOwners.create({
+            data: {
+                ...propertyOwners[1],
+                properties: {
+                    create: {
+                        ...properties[1],
+                        renters: {
+                            connect: [{ id: secondRenter.id }]
+                        }
+                    }
+                }
+            },
+            include: {
+                properties: true
+            }
+        });
 
-        const newProperty = new Property(properties[0]);
-        const newPropertyTwo = new Property(properties[1]);
-
-        newProperty.set('renters', [newRenter._id]);
-        newPropertyTwo.set('renters', [newRenterTwo._id]);
-        newProperty.set('propertyOwner', [newPropertyOwner._id]);
-        newPropertyTwo.set('propertyOwner', [newPropertyOwnerTwo._id]);
-
-        newPropertyOwner.set('properties', [newProperty._id]);
-        newPropertyOwnerTwo.set('properties', [newPropertyTwo._id]);
-
-        await newPropertyOwner.save();
-        await newPropertyOwnerTwo.save();
-
-        await newProperty.save();
-        await newPropertyTwo.save();
-
-        console.log('done');
+        return;
     } catch (err) {
         console.error('runSeed error', err);
     } finally {
-        mongoose.connection.close();
+        console.log('done');
     }
 }
 

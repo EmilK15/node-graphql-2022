@@ -66,7 +66,10 @@ async function updateProperty(propertyId, updatedProperty, Prisma) {
         };
 
     } catch (err) {
-        return PropertyNotFoundError(propertyId);
+        if (err?.meta?.cause === 'Record to update not found.') {
+            return PropertyNotFoundError(propertyId);
+        }
+        return err;
     }
 }
 

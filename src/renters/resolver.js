@@ -1,7 +1,8 @@
 const {
     getRenterById,
     createRenter,
-    getAllRenters
+    getAllRenters,
+    makeRoommates
 } = require('./dataSource');
 
 const resolvers = {
@@ -16,6 +17,9 @@ const resolvers = {
     Mutation: {
         createRenter: async (_parent, args, { prisma }) => {
             return createRenter(args.createRenterInput, prisma);
+        },
+        makeRoommates: async (_parent, args, { prisma }) => {
+            return makeRoommates(args.renterIds, prisma);
         }
     }
 };

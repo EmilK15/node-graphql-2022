@@ -25,6 +25,7 @@ const typeDefs = `#graphql
 
     type Mutation {
         createRenter(createRenterInput: CreateRenterInput): Renter
+        makeRoommates(renterIds: [ID]): [Renter]
     }
 `
 

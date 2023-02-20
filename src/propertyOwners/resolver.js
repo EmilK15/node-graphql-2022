@@ -6,14 +6,14 @@ const {
 
 const resolvers = {
     Query: {
-        getPropertyOwnerById: (_parent, args, { prisma }) => {
-            return getPropertyOwnerById(args.propertyOwnerId, prisma);
+        getPropertyOwnerById: (_parent, args) => {
+            return getPropertyOwnerById(args.propertyOwnerId);
         },
-        propertyOwners: (_parent, _args, { prisma }) => getAllPropertyOwners(prisma)
+        propertyOwners: (_parent, _args) => getAllPropertyOwners()
     },
     Mutation: {
-        createPropertyOwner: (_parent, args, { prisma }) => {
-            return createPropertyOwner(args.createPropertyOwnerInput, prisma);
+        createPropertyOwner: (_parent, args) => {
+            return createPropertyOwner(args.createPropertyOwnerInput);
         }
     }
 };

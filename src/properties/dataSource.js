@@ -1,7 +1,8 @@
 const omit = require('lodash.omit');
 const { PropertyNotFoundError } = require('../../errors');
+const Prisma = require('../prisma');
 
-async function getPropertyById(propertyId, Prisma) {
+async function getPropertyById(propertyId) {
     return Prisma.properties.findUnique({
         where: {
             id: propertyId
@@ -13,7 +14,7 @@ async function getPropertyById(propertyId, Prisma) {
     });
 }
 
-async function createProperty(property, Prisma) {
+async function createProperty(property) {
     return Prisma.properties.create({
             data: {
                 available: property.available,
@@ -35,7 +36,7 @@ async function createProperty(property, Prisma) {
         });
 }
 
-async function updateProperty(propertyId, updatedProperty, Prisma) {
+async function updateProperty(propertyId, updatedProperty) {
     const nonConnectPropertyFields = omit(updatedProperty, ['id', 'renters', 'propertyOwner']);
 
     const renters = updatedProperty.renters && {
@@ -73,7 +74,7 @@ async function updateProperty(propertyId, updatedProperty, Prisma) {
     }
 }
 
-async function getAllProperties(Prisma) {
+async function getAllProperties() {
     return Prisma.properties.findMany({
         include: {
             renters: true,

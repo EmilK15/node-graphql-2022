@@ -8,7 +8,6 @@ const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { typeDefs, resolvers } = require('./src');
-const prisma = require('./src/prisma');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -39,9 +38,7 @@ async function main() {
         // an Apollo Server instance and optional configuration options
         expressMiddleware(server, {
             context: async ({ req }) => ({
-                token: req.headers.token,
-                // passing our prisma connection for re-use
-                prisma
+                token: req.headers.token
             }),
         })
     );

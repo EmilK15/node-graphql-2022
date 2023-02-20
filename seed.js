@@ -62,9 +62,6 @@ async function runSeed() {
                 roommates: {
                     create: renters[1]
                 }
-            },
-            include: {
-                roommates: true
             }
         });
         // connect renter 2 to be a roommate of renter 1
@@ -76,9 +73,6 @@ async function runSeed() {
                 roommates: {
                     connect: [{ id: firstRenter.id }]
                 }
-            },
-            include: {
-                roommates: true
             }
         });
 
@@ -95,9 +89,6 @@ async function runSeed() {
                         }
                     }
                 }
-            },
-            include: {
-                properties: true
             }
         });
 
@@ -112,9 +103,6 @@ async function runSeed() {
                         }
                     }
                 }
-            },
-            include: {
-                properties: true
             }
         });
 

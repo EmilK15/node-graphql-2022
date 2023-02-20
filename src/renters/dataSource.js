@@ -1,6 +1,4 @@
-const Prisma = require('../prisma');
-
-async function getRenterById(renterId) {
+async function getRenterById(renterId, Prisma) {
     return Prisma.renters.findUnique({
         where: {
             id: renterId
@@ -11,7 +9,7 @@ async function getRenterById(renterId) {
     });
 }
 
-async function createRenter(renter) {
+async function createRenter(renter, Prisma) {
     return Prisma.renters.create({
         data: {
             city: renter.city,
@@ -28,7 +26,7 @@ async function createRenter(renter) {
     });
 }
 
-async function getAllRenters() {
+async function getAllRenters(Prisma) {
     return Prisma.renters.findMany({
         include: {
             roommates: true
@@ -38,7 +36,7 @@ async function getAllRenters() {
 
 // Takes a list of renterIds and ensures that each renter
 // contains a roommates field that has all the ids provided
-async function makeRoommates(renterIds) {
+async function makeRoommates(renterIds, Prisma) {
     const connectionRenterIds = renterIds.map((renterId) => ({ id: renterId }));
     const updates = renterIds.map((renterId) => Prisma.renters.update({
         where: {

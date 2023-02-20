@@ -74,7 +74,7 @@ async function runSeed() {
             },
             data: {
                 roommates: {
-                    connect: { id: firstRenter.id }
+                    connect: [{ id: firstRenter.id }]
                 }
             },
             include: {

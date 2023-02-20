@@ -1,6 +1,4 @@
-const Prisma = require('../prisma');
-
-async function getPropertyOwnerById(propertyOwnerId) {
+async function getPropertyOwnerById(propertyOwnerId, Prisma) {
     return Prisma.propertyOwners.findUnique({
         where: {
             id: propertyOwnerId
@@ -11,7 +9,7 @@ async function getPropertyOwnerById(propertyOwnerId) {
     });
 }
 
-async function createPropertyOwner(propertyOwner) {
+async function createPropertyOwner(propertyOwner, Prisma) {
     return Prisma.propertyOwners.create({
         data: {
             name: propertyOwner.name,
@@ -29,7 +27,7 @@ async function createPropertyOwner(propertyOwner) {
     });
 }
 
-async function getAllPropertyOwners() {
+async function getAllPropertyOwners(Prisma) {
     return Prisma.propertyOwners.findMany({
         include: {
             properties: true

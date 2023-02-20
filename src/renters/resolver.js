@@ -7,19 +7,19 @@ const {
 
 const resolvers = {
     Query: {
-        getRenterById: async (_parent, args) => {
-            return getRenterById(args.renterId);
+        getRenterById: async (_parent, args, { prisma }) => {
+            return getRenterById(args.renterId, prisma);
         },
-        renters: async (_parent, _args) => {
-            return getAllRenters();
+        renters: async (_parent, _args, { prisma }) => {
+            return getAllRenters(prisma);
         }
     },
     Mutation: {
-        createRenter: async (_parent, args) => {
-            return createRenter(args.createRenterInput);
+        createRenter: async (_parent, args, { prisma }) => {
+            return createRenter(args.createRenterInput, prisma);
         },
-        makeRoommates: async (_parent, args) => {
-            return makeRoommates(args.renterIds);
+        makeRoommates: async (_parent, args, { prisma }) => {
+            return makeRoommates(args.renterIds, prisma);
         }
     }
 };

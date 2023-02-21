@@ -1,56 +1,85 @@
-const { Property } = require('../models');
+const omit = require('lodash.omit');
 const { PropertyNotFoundError } = require('../../errors');
 
-async function getPropertyById(propertyId) {
-    return Property.findById(propertyId)
-        .populate('renters propertyOwner');
-}
-
-async function createProperty(property) {
-    const newProperty = new Property({
-        available: property.available,
-        city: property.city,
-        description: property.description,
-        name: property.name,
-        photos: property.photos || [],
-        propertyOwner: property.propertyOwnerId,
-        rating: 0,
-        renters: property.renters || []
+async function getPropertyById(propertyId, Prisma) {
+    return Prisma.properties.findUnique({
+        where: {
+            id: propertyId
+        },
+        include: {
+            renters: true,
+            propertyOwner: true
+        }
     });
-
-    const savedProperty = await newProperty.save();
-
-    return savedProperty
-        .populate('renters propertyOwner');
 }
 
-async function updateProperty(propertyId, updatedProperty) {
-    const savedProperty = await Property.findByIdAndUpdate(
-        propertyId,
-        updatedProperty,
-        { new: true }
-    ).populate('renters propertyOwner');
+async function createProperty(property, Prisma) {
+    return Prisma.properties.create({
+            data: {
+                available: property.available,
+                city: property.city,
+                description: property.description,
+                name: property.name,
+                photos: property.photos || [],
+                propertyOwnerId: property.propertyOwnerId,
+                rating: 0.0,
+                renters: {
+                    connect: property.renters.map((renterId) => ({ id: renterId }))
+                },
+                v: 0
+            },
+            include: {
+                propertyOwner: true,
+                renters: true
+            }
+        });
+}
 
-    if (!savedProperty) {
-        return PropertyNotFoundError(propertyId);
-    }
-    return {
-        __typename: 'Property',
-        id: savedProperty.id,
-        available: savedProperty.available,
-        city: savedProperty.city,
-        description: savedProperty.description,
-        name: savedProperty.name,
-        photos: savedProperty.photos,
-        propertyOwner: savedProperty.propertyOwnerId,
-        rating: savedProperty.rating,
-        renters: savedProperty.renters
+async function updateProperty(propertyId, updatedProperty, Prisma) {
+    const nonConnectPropertyFields = omit(updatedProperty, ['id', 'renters', 'propertyOwner']);
+
+    const renters = updatedProperty.renters && {
+        connect: updatedProperty?.renters.map((renterId) => ({ id: renterId }))
+    };
+    const propertyOwner = updatedProperty.propertyOwner && {
+        connect: { id: updatedProperty.propertyOwner }
+    };
+
+    try {
+        const savedProperty = await Prisma.properties.update({
+            where: {
+                id: propertyId
+            },
+            data: {
+                ...nonConnectPropertyFields,
+                ...(renters),
+                ...(propertyOwner)
+            },
+            include: {
+                renters: true,
+                propertyOwner: true
+            }
+        });
+        return {
+            __typename: 'Property',
+            ...savedProperty
+        };
+
+    } catch (err) {
+        if (err?.meta?.cause === 'Record to update not found.') {
+            return PropertyNotFoundError(propertyId);
+        }
+        return err;
     }
 }
 
-async function getAllProperties() {
-    return Property.find({})
-        .populate('renters propertyOwner');
+async function getAllProperties(Prisma) {
+    return Prisma.properties.findMany({
+        include: {
+            renters: true,
+            propertyOwner: true
+        }
+    });
 }
 
 module.exports = {

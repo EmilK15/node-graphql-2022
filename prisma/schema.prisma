@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL_PRISMA")
+}
+
+model Properties {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int            @map("__v")
+  available       Boolean
+  city            String
+  description     String
+  name            String
+  photos          String[]
+  propertyOwner   PropertyOwners @relation(fields: [propertyOwnerId], references: [id])
+  propertyOwnerId String         @db.ObjectId
+  rating          Float
+  renters         Renters[]
+
+  @@map("properties")
+}
+
+model PropertyOwners {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  v          Int          @map("__v")
+  address    String
+  name       String
+  photo      String
+  properties Properties[]
+  rating     Float
+
+  @@map("propertyowners")
+}
+
+model Renters {
+  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  v                Int         @map("__v")
+  city             String
+  name             String
+  rating           Float
+  roommates        Renters[]   @relation("RoommateRenters")
+  roommateRenter   Renters?    @relation("RoommateRenters", fields: [roommateId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  roommateId       String?     @db.ObjectId
+  rentedPropertyId String?     @map("rentedProperty") @db.ObjectId
+  rentedProperty   Properties? @relation(fields: [rentedPropertyId], references: [id])
+
+  @@map("renters")
+}

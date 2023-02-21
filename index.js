@@ -7,8 +7,8 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const { typeDefs, resolvers } = require('./src');
+const prisma = require('./src/prisma');
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -27,9 +27,6 @@ const server = new ApolloServer({
     ]
 });
 
-mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGODB_URL);
-
 async function main() {
     await server.start();
 
@@ -42,7 +39,9 @@ async function main() {
         // an Apollo Server instance and optional configuration options
         expressMiddleware(server, {
             context: async ({ req }) => ({
-                token: req.headers.token
+                token: req.headers.token,
+                // passing our prisma connection for re-use
+                prisma
             }),
         })
     );

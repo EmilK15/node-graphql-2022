@@ -44,7 +44,7 @@ async function makeRoommates(renterIds, Prisma) {
         },
         data: {
             roommates: {
-                connect: connectionRenterIds
+                connect: connectionRenterIds.filter(({ id }) => id !== renterId)
             }
         },
         include: {

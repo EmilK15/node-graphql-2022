@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { ApolloServer } = require('@apollo/server');
+const omit = require('lodash.omit');
 const prisma = require('../prisma');
 const { typeDefs, resolvers } = require('../');
 const { RenterFields } = require('../../test/helpers/fragments');
@@ -25,6 +26,38 @@ async function createRenter(createRenterInput) {
             }
         `,
         variables: { createRenterInput }
+    },
+    { contextValue });
+}
+
+async function deleteRenter(renterId) {
+    return testServer.executeOperation({
+        query: `
+            mutation DeleteRenter($renterId: ID) {
+                deleteRenter(renterId: $renterId)
+            }
+        `,
+        variables: {
+            renterId
+        }
+    },
+    { contextValue });
+}
+
+async function makeRoommates(renterIds) {
+    return testServer.executeOperation({
+        query: `
+            ${RenterFields}
+            mutation Mutation($renterIds: [ID]) {
+                makeRoommates(renterIds: $renterIds) {
+                    ...RenterFields
+                    roommates {
+                        ...RenterFields
+                    }
+                }
+            }
+        `,
+        variables: { renterIds }
     },
     { contextValue });
 }
@@ -86,6 +119,32 @@ describe('Renter entity endpoints', () => {
         })
     })
 
+    describe('Renter - Update', () => {
+        it('creates two users and checks both users all roommates with one another after calling makeRoommates', async() => {
+            const [renter1, renter2] = await Promise.all([
+                createRenter(createRenterInput),
+                createRenter(createRenterInput)
+            ]);
+
+            const createdRenterId1 = renter1.body.singleResult.data.createRenter.id;
+            const createdRenterId2 = renter2.body.singleResult.data.createRenter.id;
+            const { body } = await makeRoommates([createdRenterId1, createdRenterId2]);
+            expect(body.singleResult.errors).toBeUndefined();
+            expect(body.singleResult.data.makeRoommates).toEqual(
+                expect.arrayContaining([
+                    { 
+                        ...renter1.body.singleResult.data.createRenter,
+                        roommates: [{ ...omit(renter2.body.singleResult.data.createRenter, ['roommates']) }]
+                    },
+                    {
+                        ...renter2.body.singleResult.data.createRenter,
+                        roommates: [{ ...omit(renter1.body.singleResult.data.createRenter, ['roommates']) }]
+                    }
+                ])
+            )
+        }, 20000)
+    })
+
     describe('Renter - Read', () => {
         it('queries to retrieve all renters', async() => {
             const { body } = await renters();
@@ -106,5 +165,16 @@ describe('Renter entity endpoints', () => {
                 rating: 0
             });
         })
+    })
+
+    describe('Renter - Delete', () => {
+        it('creates a renter, and then deletes it', async() => {
+            const response = await createRenter(createRenterInput);
+            expect(response.body.singleResult.errors).toBeUndefined();
+            const deletedRenter = await deleteRenter(
+                response.body.singleResult.data.createRenter.id
+            );
+            expect(deletedRenter.body.singleResult.data.deleteRenter).toEqual(true);
+        }, 10000)
     })
 })

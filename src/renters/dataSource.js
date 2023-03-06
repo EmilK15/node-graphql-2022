@@ -54,9 +54,41 @@ async function makeRoommates(renterIds, Prisma) {
     return Prisma.$transaction(updates);
 }
 
+async function deleteRenter(renterId, Prisma) {
+    // retrieve document
+    const renterToDelete = await Prisma.renters.findUnique({
+        where: {
+            id: renterId
+        },
+        include: {
+            roommates: true
+        }
+    });
+    // disconnect relationship between roommate and renter
+    await Prisma.renters.update({
+        where: {
+            id: renterId
+        },
+        data: {
+            roommates: {
+                disconnect: renterToDelete.roommates.map(({ id }) => ({ id }))
+            }
+        }
+    });
+    // now delete renter
+    const deletedRenter = await Prisma.renters.delete({
+        where: {
+            id: renterId
+        }
+    });
+
+    return Boolean(deletedRenter.id);
+}
+
 module.exports = {
     getRenterById,
     createRenter,
     getAllRenters,
-    makeRoommates
+    makeRoommates,
+    deleteRenter
 };

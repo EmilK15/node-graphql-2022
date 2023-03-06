@@ -2,7 +2,8 @@ const {
     getRenterById,
     createRenter,
     getAllRenters,
-    makeRoommates
+    makeRoommates,
+    deleteRenter
 } = require('./dataSource');
 
 const resolvers = {
@@ -20,6 +21,9 @@ const resolvers = {
         },
         makeRoommates: async (_parent, args, { prisma }) => {
             return makeRoommates(args.renterIds, prisma);
+        },
+        deleteRenter: async (_parent, args, { prisma }) => {
+            return deleteRenter(args.renterId, prisma);
         }
     }
 };

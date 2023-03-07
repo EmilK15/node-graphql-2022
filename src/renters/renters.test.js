@@ -28,7 +28,7 @@ async function createRenter(createRenterInput) {
         variables: { createRenterInput }
     },
     { contextValue });
-};
+}
 
 async function deleteRenter(renterId) {
     return testServer.executeOperation({
@@ -42,7 +42,7 @@ async function deleteRenter(renterId) {
         }
     },
     { contextValue });
-};
+}
 
 async function makeRoommates(renterIds) {
     return testServer.executeOperation({
@@ -60,7 +60,7 @@ async function makeRoommates(renterIds) {
         variables: { renterIds }
     },
     { contextValue });
-};
+}
 
 async function renters() {
     return testServer.executeOperation({
@@ -76,7 +76,7 @@ async function renters() {
             }
         `},
     { contextValue });
-};
+}
 
 async function getRenterById(renterId) {
     return testServer.executeOperation({
@@ -96,7 +96,7 @@ async function getRenterById(renterId) {
         }
     },
     { contextValue });
-};
+}
 
 describe('Renter entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);

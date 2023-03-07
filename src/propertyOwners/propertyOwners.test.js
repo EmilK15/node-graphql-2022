@@ -26,7 +26,7 @@ async function createPropertyOwner(createPropertyOwnerInput) {
         variables: { createPropertyOwnerInput }
     },
     { contextValue });
-};
+}
 
 async function propertyOwners() {
     return testServer.executeOperation({
@@ -42,7 +42,7 @@ async function propertyOwners() {
         `
     },
     { contextValue });
-};
+}
 
 async function getPropertyOwnerById(propertyOwnerId) {
     return testServer.executeOperation({
@@ -61,7 +61,7 @@ async function getPropertyOwnerById(propertyOwnerId) {
         }
     },
     { contextValue });
-};
+}
 
 describe('Property Owner entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);

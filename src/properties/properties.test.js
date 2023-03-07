@@ -35,7 +35,7 @@ async function properties() {
         `
     },
     { contextValue });
-};
+}
 
 async function createProperty(createPropertyInput) {
     return testServer.executeOperation({
@@ -58,7 +58,7 @@ async function createProperty(createPropertyInput) {
         variables: { createPropertyInput }
     },
     { contextValue });
-};
+}
 
 async function updateProperty(updatePropertyInput) {
     return testServer.executeOperation({
@@ -87,7 +87,7 @@ async function updateProperty(updatePropertyInput) {
         variables: { updatePropertyInput }
     },
     { contextValue });
-};
+}
 
 async function getPropertyById(propertyId) {
     return testServer.executeOperation({
@@ -112,7 +112,7 @@ async function getPropertyById(propertyId) {
         }
     },
     { contextValue });
-};
+}
 
 describe('Property entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);

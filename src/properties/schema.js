@@ -32,7 +32,7 @@ const typeDefs = `#graphql
         rating: Float
         # need ID to attach renter to renters
         renters: [ID]
-        propertyOwner: ID
+        propertyOwnerId: ID
     }
 
     type PropertyNotFoundError implements Error {

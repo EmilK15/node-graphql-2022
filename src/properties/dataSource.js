@@ -21,7 +21,9 @@ async function createProperty(property, Prisma) {
                 description: property.description,
                 name: property.name,
                 photos: property.photos || [],
-                propertyOwnerId: property.propertyOwnerId,
+                propertyOwner: {
+                    connect: { id: property.propertyOwnerId }
+                },
                 rating: 0.0,
                 renters: {
                     connect: property.renters.map((renterId) => ({ id: renterId }))
@@ -36,13 +38,13 @@ async function createProperty(property, Prisma) {
 }
 
 async function updateProperty(propertyId, updatedProperty, Prisma) {
-    const nonConnectPropertyFields = omit(updatedProperty, ['id', 'renters', 'propertyOwner']);
+    const nonConnectPropertyFields = omit(updatedProperty, ['id', 'renters', 'propertyOwnerId']);
 
     const renters = updatedProperty.renters && {
-        connect: updatedProperty?.renters.map((renterId) => ({ id: renterId }))
+        set: updatedProperty?.renters.map((renterId) => ({ id: renterId }))
     };
-    const propertyOwner = updatedProperty.propertyOwner && {
-        connect: { id: updatedProperty.propertyOwner }
+    const propertyOwner = updatedProperty.propertyOwnerId && {
+        connect: { id: updatedProperty.propertyOwnerId }
     };
 
     try {
@@ -52,8 +54,8 @@ async function updateProperty(propertyId, updatedProperty, Prisma) {
             },
             data: {
                 ...nonConnectPropertyFields,
-                ...(renters),
-                ...(propertyOwner)
+                renters,
+                propertyOwner
             },
             include: {
                 renters: true,

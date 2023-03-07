@@ -21,6 +21,7 @@ module.exports = {
     `,
     PropertyFields: `
         fragment PropertyFields on Property {
+            available
             id
             name
             city

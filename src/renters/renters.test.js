@@ -102,8 +102,8 @@ describe('Renter entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);
 
     const createRenterInput = {
-        city: "Test City" + seedValue,
-        name: "Test renter name" + seedValue,
+        city: 'Test City' + seedValue,
+        name: 'Test renter name' + seedValue,
         roommates: []
     };
 
@@ -116,7 +116,7 @@ describe('Renter entity endpoints', () => {
                 id: expect.any(String),
                 rating: 0
             });
-        })
+        });
     })
 
     describe('Renter - Update', () => {

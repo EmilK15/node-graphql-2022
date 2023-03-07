@@ -28,7 +28,7 @@ async function createRenter(createRenterInput) {
         variables: { createRenterInput }
     },
     { contextValue });
-}
+};
 
 async function deleteRenter(renterId) {
     return testServer.executeOperation({
@@ -42,7 +42,7 @@ async function deleteRenter(renterId) {
         }
     },
     { contextValue });
-}
+};
 
 async function makeRoommates(renterIds) {
     return testServer.executeOperation({
@@ -60,7 +60,7 @@ async function makeRoommates(renterIds) {
         variables: { renterIds }
     },
     { contextValue });
-}
+};
 
 async function renters() {
     return testServer.executeOperation({
@@ -76,7 +76,7 @@ async function renters() {
             }
         `},
     { contextValue });
-}
+};
 
 async function getRenterById(renterId) {
     return testServer.executeOperation({
@@ -96,7 +96,7 @@ async function getRenterById(renterId) {
         }
     },
     { contextValue });
-}
+};
 
 describe('Renter entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);
@@ -117,7 +117,7 @@ describe('Renter entity endpoints', () => {
                 rating: 0
             });
         });
-    })
+    });
 
     describe('Renter - Update', () => {
         it('creates two users and checks both users all roommates with one another after calling makeRoommates', async() => {
@@ -142,15 +142,15 @@ describe('Renter entity endpoints', () => {
                     }
                 ])
             )
-        }, 20000)
-    })
+        });
+    });
 
     describe('Renter - Read', () => {
         it('queries to retrieve all renters', async() => {
             const { body } = await renters();
             expect(body.singleResult.errors).toBeUndefined();
             expect(Array.isArray(body.singleResult.data.renters)).toBe(true);
-        })
+        });
 
         it('queries for the renter created previously using getRenterById', async() => {
             const createRenterResponse = await createRenter(createRenterInput);
@@ -164,8 +164,8 @@ describe('Renter entity endpoints', () => {
                 id: createdRenterId,
                 rating: 0
             });
-        })
-    })
+        });
+    });
 
     describe('Renter - Delete', () => {
         it('creates a renter, and then deletes it', async() => {
@@ -175,6 +175,6 @@ describe('Renter entity endpoints', () => {
                 response.body.singleResult.data.createRenter.id
             );
             expect(deletedRenter.body.singleResult.data.deleteRenter).toEqual(true);
-        }, 10000)
-    })
-})
+        });
+    });
+});

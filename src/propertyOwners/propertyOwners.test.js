@@ -3,7 +3,6 @@ const { ApolloServer } = require('@apollo/server');
 const prisma = require('../prisma');
 const { typeDefs, resolvers } = require('../');
 const { RenterFields, PropertyFields, PropertyOwnerFields } = require('../../test/helpers/fragments');
-const { createProperty } = require('../properties/dataSource');
 
 const testServer = new ApolloServer({
     typeDefs,
@@ -27,7 +26,7 @@ async function createPropertyOwner(createPropertyOwnerInput) {
         variables: { createPropertyOwnerInput }
     },
     { contextValue });
-}
+};
 
 async function propertyOwners() {
     return testServer.executeOperation({
@@ -43,7 +42,7 @@ async function propertyOwners() {
         `
     },
     { contextValue });
-}
+};
 
 async function getPropertyOwnerById(propertyOwnerId) {
     return testServer.executeOperation({
@@ -62,7 +61,7 @@ async function getPropertyOwnerById(propertyOwnerId) {
         }
     },
     { contextValue });
-}
+};
 
 describe('Property Owner entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);
@@ -74,20 +73,12 @@ describe('Property Owner entity endpoints', () => {
         properties: []
     };
 
-    const createPropertyInput = {
-        available: true,
-        city: 'Test Property City - ' + seedValue,
-        renters: [],
-        name: 'Test Property Name - ' + seedValue,
-        description: 'Test Property Decription - ' + seedValue
-    };
-
     describe('PropertyOwner - Read', () => {
         it('Retrieves all propertyOwners', async() => {
             const { body } = await propertyOwners();
             expect(body.singleResult.errors).toBeUndefined();
             expect(Array.isArray(body.singleResult.data.propertyOwners)).toBe(true);
-        })
+        });
 
         it('Queries for the propertyOwner created previously using getPropertyOwnerById', async() => {
             const result = await createPropertyOwner(createPropertyOwnerInput);
@@ -98,8 +89,8 @@ describe('Property Owner entity endpoints', () => {
             const { body } = await getPropertyOwnerById(createdPropertyOwner.id);
             expect(body.singleResult.errors).toBeUndefined();
             expect(body.singleResult.data.getPropertyOwnerById).toEqual(createdPropertyOwner);
-        })
-    })
+        });
+    });
 
     describe('PropertyOwner - Create', () => {
         it('Creates a propertyOwner', async() => {
@@ -112,4 +103,4 @@ describe('Property Owner entity endpoints', () => {
             });
         });
     });
-})
+});

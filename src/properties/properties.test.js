@@ -35,7 +35,7 @@ async function properties() {
         `
     },
     { contextValue });
-}
+};
 
 async function createProperty(createPropertyInput) {
     return testServer.executeOperation({
@@ -58,7 +58,7 @@ async function createProperty(createPropertyInput) {
         variables: { createPropertyInput }
     },
     { contextValue });
-}
+};
 
 async function updateProperty(updatePropertyInput) {
     return testServer.executeOperation({
@@ -87,7 +87,7 @@ async function updateProperty(updatePropertyInput) {
         variables: { updatePropertyInput }
     },
     { contextValue });
-}
+};
 
 async function getPropertyById(propertyId) {
     return testServer.executeOperation({
@@ -112,7 +112,7 @@ async function getPropertyById(propertyId) {
         }
     },
     { contextValue });
-}
+};
 
 describe('Property entity endpoints', () => {
     const seedValue = Math.floor(Math.random() * 10000);
@@ -152,7 +152,7 @@ describe('Property entity endpoints', () => {
             });
 
             createdProperty = body.singleResult.data.createProperty;
-        }, 10000);
+        });
 
         it('Retrieves all properties', async() => {
             const { body } = await properties();
@@ -165,7 +165,7 @@ describe('Property entity endpoints', () => {
             expect(body.singleResult.errors).toBeUndefined();
             expect(body.singleResult.data.getPropertyById).toEqual(createdProperty)
         });
-    })
+    });
 
     describe('Property - Create', () => {
         it('Create a propertyOwner and a renter to create a property and tests that relationships are connected', async() => {
@@ -188,7 +188,7 @@ describe('Property entity endpoints', () => {
                 renters: [omit(renter, ['rentedPropertyId', 'roommateId', 'roommates', 'v'])],
                 propertyOwner: omit(propertyOwner, ['properties', 'v'])
             });
-        }, 20000)            
+        });            
     });
 
     describe('Property - Update', () => {
@@ -205,7 +205,7 @@ describe('Property entity endpoints', () => {
             });
 
             createdProperty = body.singleResult.data.createProperty;
-        }, 10000);
+        });
 
         it('Updates a property with an incorrect ID and returns PropertyNotFoundError', async() => {
             const NON_EXISTANT_UUID = '63c19d15b3db1c7857b59a7c';
@@ -215,7 +215,7 @@ describe('Property entity endpoints', () => {
                 message: 'Unable to find property with associated id.',
                 propertyId: NON_EXISTANT_UUID
             })
-        })
+        });
 
         it('Updates previously created property and updates non-relational fields', async() => {
             const updatesToProperty = {
@@ -235,7 +235,7 @@ describe('Property entity endpoints', () => {
                 rating: 0,
                 renters: expect.any(Array)
             })
-        })
+        });
 
         it('Updates previously created property and updates renters with newly created Renter', async() => {
             const newCreatedRenterInput = {
@@ -255,7 +255,7 @@ describe('Property entity endpoints', () => {
             expect(body.singleResult.data.updateProperty.renters).toEqual(
                 [omit(renter, ['rentedPropertyId', 'roommateId', 'roommates', 'v'])]
             )
-        }, 20000)
+        });
 
         it('Updates previously created property and updates propertyOwner with newly created propertyOwner', async() => {
             const newCreatedPropertyOwnerInput = {
@@ -275,6 +275,6 @@ describe('Property entity endpoints', () => {
             expect(body.singleResult.data.updateProperty.propertyOwner).toEqual(
                 omit(propertyOwner, ['v', 'properties'])
             )
-        }, 20000)
-    })
-})
+        });
+    });
+});

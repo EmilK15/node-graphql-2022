@@ -55,15 +55,6 @@ async function makeRoommates(renterIds, Prisma) {
 }
 
 async function deleteRenter(renterId, Prisma) {
-    // retrieve document
-    const renterToDelete = await Prisma.renters.findUnique({
-        where: {
-            id: renterId
-        },
-        include: {
-            roommates: true
-        }
-    });
     // disconnect relationship between roommate and renter
     await Prisma.renters.update({
         where: {
@@ -71,7 +62,7 @@ async function deleteRenter(renterId, Prisma) {
         },
         data: {
             roommates: {
-                disconnect: renterToDelete.roommates.map(({ id }) => ({ id }))
+                set: []
             }
         }
     });
